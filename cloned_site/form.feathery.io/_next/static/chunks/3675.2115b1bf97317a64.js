@@ -1,0 +1,18 @@
+try{let e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},t=(new e.Error).stack;t&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[t]="4e9fc25a-c72f-4d34-8922-85422c031800",e._sentryDebugIdIdentifier="sentry-dbid-4e9fc25a-c72f-4d34-8922-85422c031800")}catch(e){}"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[3675],{3806:function(e,t,n){n.d(t,{c:function(){return a},i:function(){return u},n:function(){return r},p:function(){return s}});let r=(e,t="StytchProvider")=>`${e} can only be used inside <${t}>.`,s="You cannot render a <StytchProvider> inside another <StytchProvider>.",i=e=>`[Stytch] Invalid serverside function call to ${e}.
+The Stytch Javascript SDK is intended to ony be used on the client side.
+Make sure to wrap your API calls in a hook to ensure they are executed on the client.
+\`\`\`
+const myComponent = () => {
+  const stytch = useStytch();
+  // This will error out on the server.
+  stytch.magicLinks.authenticate(...);
+  useEffect(() => {
+    // This will work well
+    stytch.magicLinks.authenticate(...);
+  }, []);
+}
+\`\`\`
+
+If you want to make API calls from server environments, please use the Stytch Node Library
+https://www.npmjs.com/package/stytch.
+`,o=Symbol("__stytch_SSRStubKey"),u=e=>!!e[o],c=e=>new Proxy(()=>{},{get:(t,n)=>n===o||c(e+"."+String(n)),apply(){throw Error(i(e))}}),a=()=>c("stytch")},3793:function(e,t,n){n.d(t,{di:function(){return p},G6:function(){return w},JR:function(){return b}});var r=n(2265);let s=(({KEYS_TO_EXCLUDE:e=[]}={})=>{let t=(n,r)=>typeof n==typeof r&&(null===n||null===r?n===r:"object"==typeof n?!(Object.keys(n).length!==Object.keys(r).length||Object.keys(n).some(e=>!(e in r)))&&Object.entries(n).filter(([t])=>!e.includes(t)).every(([e,n])=>t(n,r[e])):n===r);return t})(),i=(e,t)=>e===t?t:Object.keys(e).reduce((n,r)=>(r in t&&s(e[r],t[r])&&(n[r]=e[r]),n),Object.assign({},t)),o=e=>{let t=(0,r.useRef)(!0),[n,s]=(0,r.useState)(e);return(0,r.useEffect)(()=>(t.current=!0,()=>{t.current=!1}),[]),[n,(0,r.useCallback)(e=>{t.current&&s(e)},[])]};function u(e,t){if(!e)throw Error(t)}"undefined"!=typeof window?r.useLayoutEffect:r.useEffect;var c=n(3806);n(8575);let a={user:null,fromCache:!1,isInitialized:!1},l={session:null,fromCache:!1,isInitialized:!1},d=(0,r.createContext)({isMounted:!1}),f=(0,r.createContext)(a),y=(0,r.createContext)(l),h=()=>(0,r.useContext)(d).isMounted,b=()=>(u(h(),(0,c.n)("useStytchUser")),(0,r.useContext)(f)),w=()=>{let e=(0,r.useContext)(d);return u(e.isMounted,(0,c.n)("useStytch")),e.client},p=({stytch:e,children:t,assumeHydrated:n=!1})=>{u(!h(),c.p),u(!n||"undefined"!=typeof window,"The `assumeHydrated` prop must be set to `false` when using StytchProvider in a server environment.");let s=(0,r.useMemo)(()=>({client:e,isMounted:!0}),[e]),b=(0,r.useCallback)(()=>({session:Object.assign(Object.assign({},e.session.getInfo()),{isInitialized:!0}),user:Object.assign(Object.assign({},e.user.getInfo()),{isInitialized:!0})}),[e]),w=()=>({session:l,user:a}),[{user:p,session:g},v]=o(()=>n?b():w()),m=(0,r.useRef)(n);return(0,r.useEffect)(()=>{if((0,c.i)(e))return;let t=()=>{v(e=>i(e,b()))};return m.current||t(),e.onStateChange(t)},[b,v,e]),r.createElement(d.Provider,{value:s},r.createElement(f.Provider,{value:p},r.createElement(y.Provider,{value:g},t)))}},9393:function(e,t,n){n.d(t,{w:function(){return i}});var r=n(8575),s=n(3806);let i=(...e)=>"undefined"==typeof window?(0,s.c)():new r.bw(...e)}}]);

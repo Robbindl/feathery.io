@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#111a3a">
+    <title>Reports · Feathery Admin</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #141b3a;
+        --muted: #68718b;
+        --line: #e6e9f2;
+        --canvas: #f7f8fc;
+        --surface: #ffffff;
+        --navy: #111a3a;
+        --purple: #7864f4;
+        --blue: #3989f6;
+        --green: #198a67;
+        --shadow: 0 20px 55px rgba(23, 33, 74, .08);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        background: var(--canvas);
+        color: var(--ink);
+        font-size: 14px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a { color: inherit; }
+
+      .app-shell {
+        display: grid;
+        grid-template-columns: 252px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        padding: 24px 16px 18px;
+        background: var(--navy);
+        color: #d8ddf2;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 4px 12px 28px;
+        color: #fff;
+        font-size: 19px;
+        font-weight: 750;
+        letter-spacing: -.04em;
+        text-decoration: none;
+      }
+
+      .brand-mark {
+        position: relative;
+        width: 27px;
+        height: 27px;
+        overflow: hidden;
+        border-radius: 9px;
+        background: linear-gradient(145deg, #aa8cff, #4c9cff);
+        box-shadow: 0 6px 16px rgba(105, 125, 255, .32);
+      }
+
+      .brand-mark::before,
+      .brand-mark::after {
+        position: absolute;
+        content: "";
+        border: 2px solid rgba(255, 255, 255, .9);
+        border-radius: 50%;
+      }
+
+      .brand-mark::before { inset: 6px 9px 6px 5px; }
+      .brand-mark::after { inset: 6px 5px 6px 9px; }
+
+      .workspace-label,
+      .nav-label {
+        padding: 0 12px 9px;
+        color: #8994b9;
+        font-size: 10px;
+        font-weight: 750;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+      }
+
+      .workspace {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 4px 28px;
+        padding: 10px;
+        border: 1px solid rgba(255, 255, 255, .1);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, .06);
+      }
+
+      .workspace-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        border-radius: 9px;
+        background: linear-gradient(135deg, #5e8efc, #8a69ee);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .workspace strong,
+      .workspace span { display: block; }
+      .workspace strong { color: #fff; font-size: 12px; font-weight: 650; }
+      .workspace span { margin-top: 2px; color: #9ba6c7; font-size: 11px; }
+
+      .nav { display: grid; gap: 5px; }
+
+      .nav a {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        min-height: 42px;
+        padding: 0 12px;
+        border-radius: 10px;
+        color: #aab3d0;
+        font-size: 13px;
+        font-weight: 560;
+        text-decoration: none;
+      }
+
+      .nav a:hover { background: rgba(255, 255, 255, .07); color: #fff; }
+      .nav a.active { background: linear-gradient(90deg, rgba(126, 105, 246, .28), rgba(72, 138, 246, .12)); color: #fff; }
+
+      .nav-icon {
+        display: grid;
+        width: 18px;
+        height: 18px;
+        place-items: center;
+        color: currentColor;
+      }
+
+      .sidebar-footer {
+        margin-top: auto;
+        padding: 18px 12px 2px;
+        color: #8994b9;
+        font-size: 11px;
+        line-height: 1.55;
+      }
+
+      .sidebar-footer span { color: #c7cee4; }
+
+      .main { min-width: 0; overflow: hidden; }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 72px;
+        padding: 0 42px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, .78);
+        backdrop-filter: blur(12px);
+      }
+
+      .breadcrumbs {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #8b93a9;
+        font-size: 12px;
+      }
+
+      .breadcrumbs strong { color: var(--ink); font-weight: 650; }
+      .crumb-arrow { color: #b4bacb; }
+
+      .admin-chip {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #626c86;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .admin-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        border: 1px solid #d9dff1;
+        border-radius: 50%;
+        background: #eef0ff;
+        color: #6355c9;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .content {
+        width: min(1120px, calc(100% - 84px));
+        margin: 0 auto;
+        padding: 54px 0 64px;
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--purple);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .16em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        color: var(--ink);
+        font-size: clamp(30px, 4vw, 42px);
+        font-weight: 760;
+        letter-spacing: -.055em;
+        line-height: 1.05;
+      }
+
+      .intro {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 32px;
+        margin-bottom: 38px;
+      }
+
+      .intro-copy { max-width: 610px; }
+      .intro-copy p { margin: 15px 0 0; color: var(--muted); font-size: 15px; line-height: 1.7; }
+
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        min-height: 43px;
+        padding: 0 16px;
+        border: 1px solid transparent;
+        border-radius: 9px;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+      }
+
+      .button:hover { transform: translateY(-1px); }
+      .button.secondary { border-color: #dce1ee; background: #fff; color: #303a5b; }
+      .button.secondary:hover { box-shadow: 0 8px 18px rgba(23, 33, 74, .08); }
+      .button.primary { background: linear-gradient(105deg, #6f60e9, #4b91f5); color: #fff; box-shadow: 0 9px 20px rgba(92, 105, 231, .22); }
+      .button.primary:hover { box-shadow: 0 12px 25px rgba(92, 105, 231, .3); }
+      .button svg { width: 16px; height: 16px; }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-bottom: 20px;
+      }
+
+      .stat-card {
+        position: relative;
+        overflow: hidden;
+        min-height: 114px;
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        background: var(--surface);
+        box-shadow: 0 8px 24px rgba(23, 33, 74, .035);
+      }
+
+      .stat-card::after {
+        position: absolute;
+        right: -18px;
+        bottom: -32px;
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: rgba(121, 100, 244, .08);
+        content: "";
+      }
+
+      .stat-label { color: #818aa4; font-size: 11px; font-weight: 650; }
+      .stat-value { margin-top: 10px; color: var(--ink); font-size: 19px; font-weight: 750; letter-spacing: -.025em; }
+      .stat-detail { margin-top: 4px; color: #8b93a9; font-size: 11px; }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .panel-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 25px 26px 22px;
+        border-bottom: 1px solid #edf0f6;
+      }
+
+      .panel-title { margin: 0; color: var(--ink); font-size: 16px; font-weight: 720; letter-spacing: -.02em; }
+      .panel-description { max-width: 630px; margin: 7px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        flex: none;
+        padding: 7px 10px;
+        border-radius: 999px;
+        background: #eaf8f2;
+        color: var(--green);
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #27b27f; }
+
+      .preview { overflow-x: auto; padding: 7px 26px 22px; }
+      .preview table { width: 100%; min-width: 570px; border-collapse: collapse; }
+      .preview th { padding: 14px 0 11px; color: #98a0b4; font-size: 10px; font-weight: 750; letter-spacing: .08em; text-align: left; text-transform: uppercase; }
+      .preview td { padding: 14px 0; border-top: 1px solid #f0f2f7; color: #68718b; font-size: 12px; }
+      .preview td:first-child { color: var(--ink); font-weight: 650; }
+      .preview th:not(:first-child), .preview td:not(:first-child) { padding-left: 22px; }
+      .ready { color: var(--green) !important; font-weight: 700; }
+
+      .privacy-note {
+        display: flex;
+        align-items: flex-start;
+        gap: 13px;
+        margin-top: 20px;
+        padding: 17px 19px;
+        border: 1px solid #e6e0ff;
+        border-radius: 13px;
+        background: linear-gradient(100deg, #f7f5ff, #f5f9ff);
+      }
+
+      .privacy-icon {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        flex: none;
+        place-items: center;
+        border-radius: 9px;
+        background: #e9e4ff;
+        color: #6c5bd8;
+      }
+
+      .privacy-note strong { display: block; color: #313a60; font-size: 12px; }
+      .privacy-note p { margin: 4px 0 0; color: #737b96; font-size: 11px; line-height: 1.55; }
+
+      .footer { margin-top: 28px; color: #9aa2b5; font-size: 11px; text-align: right; }
+
+      @media (max-width: 860px) {
+        .app-shell { grid-template-columns: 1fr; }
+        .sidebar { display: none; }
+        .topbar { padding: 0 24px; }
+        .content { width: min(100% - 48px, 720px); padding-top: 40px; }
+        .intro { display: block; }
+        .button-row { justify-content: flex-start; margin-top: 24px; }
+      }
+
+      @media (max-width: 560px) {
+        .topbar { min-height: 62px; padding: 0 18px; }
+        .breadcrumbs span:not(.crumb-arrow), .admin-chip span { display: none; }
+        .content { width: calc(100% - 32px); padding: 32px 0 42px; }
+        .stats { grid-template-columns: 1fr; }
+        .panel-header { display: block; padding: 21px 18px 18px; }
+        .status-pill { margin-top: 14px; }
+        .preview { padding-right: 18px; padding-left: 18px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Admin navigation">
+        <a class="brand" href="/admin" aria-label="Feathery admin home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>feathery</span>
+        </a>
+
+        <div class="workspace-label">Workspace</div>
+        <div class="workspace">
+          <div class="workspace-avatar" aria-hidden="true">PL</div>
+          <div>
+            <strong>Personal Loans</strong>
+            <span>Local workspace</span>
+          </div>
+        </div>
+
+        <div class="nav-label">Manage</div>
+        <nav class="nav">
+          <a class="active" href="#overview" aria-current="page">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>
+            </span>
+            Reports
+          </a>
+          <a href="#exports">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 18v2h14v-2"/></svg>
+            </span>
+            Data exports
+          </a>
+          <a href="#security">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 20 6v5c0 5-3.4 8.2-8 10-4.6-1.8-8-5-8-10V6l8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+            </span>
+            Security
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <span>Feathery Admin</span><br>
+          Submission operations workspace
+        </div>
+      </aside>
+
+      <main class="main" id="overview">
+        <header class="topbar">
+          <div class="breadcrumbs">
+            <span>Personal Loans</span>
+            <span class="crumb-arrow" aria-hidden="true">/</span>
+            <strong>Reports</strong>
+          </div>
+          <div class="admin-chip">
+            <span>Admin workspace</span>
+            <div class="admin-avatar" aria-hidden="true">AD</div>
+          </div>
+        </header>
+
+        <div class="content">
+          <section class="intro" aria-labelledby="page-title">
+            <div class="intro-copy">
+              <p class="eyebrow">Data operations</p>
+              <h1 id="page-title">Submission reports</h1>
+              <p>Turn the latest saved form data into a clean, ready-to-share report. Exports are generated on demand from your MongoDB records.</p>
+            </div>
+            <div class="button-row" id="exports">
+              <a class="button secondary" href="/api/export.csv">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 18v2h14v-2"/></svg>
+                Download CSV
+              </a>
+              <a class="button primary" href="/api/export.xlsx">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 18v2h14v-2"/></svg>
+                Download Excel
+              </a>
+            </div>
+          </section>
+
+          <section class="stats" aria-label="Report details">
+            <article class="stat-card">
+              <div class="stat-label">Data source</div>
+              <div class="stat-value">MongoDB</div>
+              <div class="stat-detail">Current saved submissions</div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-label">Available formats</div>
+              <div class="stat-value">CSV + XLSX</div>
+              <div class="stat-detail">Ready for reporting workflows</div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-label">Capture mode</div>
+              <div class="stat-value">Continuous</div>
+              <div class="stat-detail">Latest version per session</div>
+            </article>
+          </section>
+
+          <section class="panel" aria-labelledby="export-title">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title" id="export-title">Export center</h2>
+                <p class="panel-description">Each capture session appears as one row. Nested fields are flattened into columns so the report is easy to filter, sort, and share.</p>
+              </div>
+              <div class="status-pill"><span class="status-dot" aria-hidden="true"></span>Ready to export</div>
+            </div>
+            <div class="preview">
+              <table>
+                <thead>
+                  <tr><th>Report</th><th>Form</th><th>Content</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Latest saved submissions</td><td>Personal Loan Application</td><td>Flattened fields</td><td class="ready">Available</td></tr>
+                  <tr><td>Generated on demand</td><td>MongoDB collection</td><td>CSV or XLSX</td><td class="ready">Available</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="privacy-note" id="security" aria-label="Privacy notice">
+            <div class="privacy-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 20 6v5c0 5-3.4 8.2-8 10-4.6-1.8-8-5-8-10V6l8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+            </div>
+            <div>
+              <strong>Keep this workspace private</strong>
+              <p>Reports contain captured form data. This page currently has no login layer, so protect the route before making the application publicly accessible.</p>
+            </div>
+          </section>
+
+          <div class="footer">Feathery Admin · Local submission operations</div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
